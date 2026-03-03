@@ -12,8 +12,7 @@ The website's main navigation menu is accessible from all pages and includes the
 2. **Skills**: [https://nbarkiya.xyz/skills](https://nbarkiya.xyz/skills)
 3. **Projects**: [https://nbarkiya.xyz/projects](https://nbarkiya.xyz/projects)
 4. **Experience**: [https://nbarkiya.xyz/experience](https://nbarkiya.xyz/experience)
-5. **Contributions**: [https://nbarkiya.xyz/contributions](https://nbarkiya.xyz/contributions)
-6. **Contact**: [https://nbarkiya.xyz/contact](https://nbarkiya.xyz/contact)
+5. **Contact**: [https://nbarkiya.xyz/contact](https://nbarkiya.xyz/contact)
 
 ---
 
@@ -29,7 +28,7 @@ The website's main navigation menu is accessible from all pages and includes the
 - **Skills Overview**: Highlights key skills with a prompt to view all skills.
 - **Projects Highlights**: Summarizes notable technical projects with links to detailed descriptions.
 - **Experience Highlights**: Summarizes professional work experience with links to detailed descriptions.
-- **Contributions Summary**: Lists recent open-source contributions with links for more information.
+- **Contributions Summary**: (removed)
 
 ### 2. Skills
 
@@ -57,11 +56,7 @@ The website's main navigation menu is accessible from all pages and includes the
 
 ### 5. Contributions
 
-**URL:** [https://nbarkiya.xyz/contributions](https://nbarkiya.xyz/contributions)
-
-**Sections:**
-
-- **Open-Source Contributions**: Lists contributions with descriptions and links to the respective repositories.
+Contributions have been removed from this portfolio.
 
 ### 6. Contact
 

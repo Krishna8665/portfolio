@@ -78,7 +78,7 @@ export default function BlogsPage() {
           "@type": "Person",
           name: siteConfig.authorName,
         },
-        keywords: blog.tags.join(", "),
+        keywords: (blog.tags ?? []).join(", "),
         ...(blog.coverImage && {
           image: `${siteConfig.url}${blog.coverImage}`,
         }),

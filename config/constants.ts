@@ -4,6 +4,8 @@ export type ValidSkills =
   | "GraphQL"
   | "Nest.js"
   | "express.js"
+  | "Express"
+  | "JWT"
   | "Node.js"
   | "MongoDB"
   | "Typescript"
@@ -79,6 +81,5 @@ export type ValidPages =
   | "projects"
   | "experience"
   | "contact"
-  | "contributions"
   | "resume"
   | "blogs";

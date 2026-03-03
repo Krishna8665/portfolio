@@ -49,7 +49,8 @@ export function getAllBlogsMeta(): BlogMeta[] {
   const blogs = slugs.map((slug) => {
     const filePath = path.join(BLOGS_DIR, `${slug}.md`);
     const raw = fs.readFileSync(filePath, "utf8");
-    const { data } = matter(raw);
+    const normalized = normalizeRawMarkdown(raw);
+    const { data } = matter(normalized);
     return {
       slug,
       ...(data as BlogFrontmatter),
@@ -65,7 +66,8 @@ export function getAllBlogsMeta(): BlogMeta[] {
 export async function getBlogPost(slug: string): Promise<BlogPost> {
   const filePath = path.join(BLOGS_DIR, `${slug}.md`);
   const raw = fs.readFileSync(filePath, "utf8");
-  const { data, content } = matter(raw);
+  const normalized = normalizeRawMarkdown(raw);
+  const { data, content } = matter(normalized);
 
   const processed = await remark()
     .use(remarkGfm)
@@ -79,6 +81,28 @@ export async function getBlogPost(slug: string): Promise<BlogPost> {
     ...(data as BlogFrontmatter),
     contentHtml,
   };
+}
+
+/**
+ * Some editors or tools may wrap the markdown file in a fenced code block
+ * (for example: ````markdown\n--- frontmatter ---\n...\n```\n````). This helper
+ * strips any outer code-fence lines so gray-matter can parse the frontmatter.
+ */
+function normalizeRawMarkdown(raw: string): string {
+  // Split into lines and strip any leading/trailing code-fence lines.
+  const lines = raw.split(/\r?\n/);
+
+  // Remove leading fence lines (e.g., ```markdown or ````markdown)
+  while (lines.length > 0 && /^\s*`{3,}/.test(lines[0])) {
+    lines.shift();
+  }
+
+  // Remove trailing fence lines
+  while (lines.length > 0 && /^\s*`{3,}/.test(lines[lines.length - 1])) {
+    lines.pop();
+  }
+
+  return lines.join("\n");
 }
 
 /** Returns the featured blogs (marked featured: true), falling back to the latest 3 */

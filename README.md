@@ -53,6 +53,8 @@ To get started with your own portfolio website:
 
 2. Copy the contents of `.env.copy` to a new `.env` file and fill in the required information.
 
+   Tip: If you want Google Analytics enabled, set `NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID` in your `.env` (e.g. `G-XXXXXXXXXX`). The app will run without this variable but analytics will remain disabled.
+
 3. Install dependencies:
 
    ```bash
@@ -79,14 +81,14 @@ To get started with your own portfolio website:
 
 Easily personalize your portfolio using the configuration files below:
 
-| Section            | How to Customize                                       | File Location             |
-| ------------------ | ------------------------------------------------------ | ------------------------- |
-| **Personal Info**  | Edit your name, bio, and social links                  | `config/site.ts`          |
-| **Skills**         | Add or modify the technologies and skills you showcase | `config/skills.ts`        |
-| **Projects**       | Highlight your technical projects                      | `config/projects.ts`      |
-| **Experience**     | Add your work and professional experience              | `config/experience.ts`    |
-| **Contributions**  | Display open-source/community contributions            | `config/contributions.ts` |
-| **Colors & Theme** | Customize color palette and themes                     | `tailwind.config.js`      |
+| Section            | How to Customize                                       | File Location          |
+| ------------------ | ------------------------------------------------------ | ---------------------- |
+| **Personal Info**  | Edit your name, bio, and social links                  | `config/site.ts`       |
+| **Skills**         | Add or modify the technologies and skills you showcase | `config/skills.ts`     |
+| **Projects**       | Highlight your technical projects                      | `config/projects.ts`   |
+| **Experience**     | Add your work and professional experience              | `config/experience.ts` |
+| **Contributions**  | (removed)                                              |                        |
+| **Colors & Theme** | Customize color palette and themes                     | `tailwind.config.js`   |
 
 All configuration files are well-organized and documented for a smooth customization process.
 

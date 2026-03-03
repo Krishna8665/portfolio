@@ -40,7 +40,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
         <div className="p-5 flex flex-col flex-grow gap-3">
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5" aria-label="Tags">
-            {blog.tags.slice(0, 3).map((tag) => (
+            {((blog.tags ?? []) as string[]).slice(0, 3).map((tag) => (
               <span
                 key={tag}
                 className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/20"
@@ -48,9 +48,9 @@ export default function BlogCard({ blog }: BlogCardProps) {
                 {tag}
               </span>
             ))}
-            {blog.tags.length > 3 && (
+            {(blog.tags ?? []).length > 3 && (
               <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-muted text-muted-foreground">
-                +{blog.tags.length - 3}
+                +{(blog.tags ?? []).length - 3}
               </span>
             )}
           </div>
