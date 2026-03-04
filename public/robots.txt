@@ -3,4 +3,5 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://nbarkiya.xyz/sitemap.xml 
+# Update: point sitemap to the site URL configured in `config/site.ts` (change if you deploy to a custom domain)
+Sitemap: https://github.com/Krishna8665/sitemap.xml
