@@ -34,18 +34,21 @@ export function MobileNav({ items, children }: MobileNavProps) {
           </span>
         </Link>
         <nav className="grid grid-flow-row auto-rows-max text-sm">
-          {items.map((item, index) => (
-            <Link
-              key={index}
-              href={item.disabled ? "#" : item.href}
-              className={cn(
-                "flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline",
-                item.disabled && "cursor-not-allowed opacity-60"
-              )}
-            >
-              {item.title}
-            </Link>
-          ))}
+          {(items ?? []).map((item, index) => {
+            const href = item?.disabled ? "#" : (item?.href ?? "#");
+            return (
+              <Link
+                key={index}
+                href={href}
+                className={cn(
+                  "flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline",
+                  item.disabled && "cursor-not-allowed opacity-60"
+                )}
+              >
+                {item.title}
+              </Link>
+            );
+          })}
         </nav>
         {children ? <div className="pt-2">{children}</div> : null}
       </div>

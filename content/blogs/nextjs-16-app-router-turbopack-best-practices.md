@@ -3,7 +3,7 @@ title: "Next.js 16 Guide: App Router, Turbopack and Best Practices"
 date: "2026-03-03"
 description: "Practical guide to building modern Next.js 16 apps with the App Router, Turbopack, and patterns for routing, data fetching, and asset handling."
 tags: ["Next.js", "Turbopack", "SSR", "App Router"]
-coverImage: "/projects/portfolio/nextjs-guide.png"
+coverImage: "/projects/portfolio/logo.png"
 featured: true
 readingTime: 7
 ---

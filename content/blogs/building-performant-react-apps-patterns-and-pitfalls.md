@@ -3,7 +3,7 @@ title: "Building Performant React Apps: Patterns and Pitfalls"
 date: "2026-03-03"
 description: "Practical patterns and anti-patterns to keep React apps fast and maintainable — state colocation, memoization, rendering performance, and tooling tips."
 tags: ["React", "Performance", "WebDev"]
-coverImage: "/projects/portfolio/react-performance.png"
+coverImage: "/projects/portfolio/logo.png"
 featured: true
 readingTime: 6
 ---

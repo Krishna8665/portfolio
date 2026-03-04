@@ -1,4 +1,5 @@
 import { ValidCategory, ValidExpType, ValidSkills } from "./constants";
+import { siteConfig } from "./site";
 
 interface PagesInfoInterface {
   title: string;
@@ -35,8 +36,8 @@ export const Projects: ProjectInterface[] = [
     category: ["Web Dev", "Frontend", "UI/UX"],
     shortDescription:
       "Open-source Next.js portfolio template recognized and forked by developers worldwide, optimized for SEO/AEO and performance.",
-    websiteLink: "https://nbarkiya.xyz",
-    githubLink: "https://github.com/namanbarkiya/minimal-next-portfolio",
+    websiteLink: siteConfig.url,
+    githubLink: `https://github.com/${siteConfig.username}/minimal-next-portfolio`,
     techStack: [
       "Next.js",
       "React",
