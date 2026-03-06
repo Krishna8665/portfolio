@@ -1,5 +1,4 @@
 import { ValidCategory, ValidExpType, ValidSkills } from "./constants";
-import { siteConfig } from "./site";
 
 interface PagesInfoInterface {
   title: string;
@@ -23,80 +22,134 @@ export interface ProjectInterface {
   techStack: ValidSkills[];
   startDate: Date;
   endDate: Date;
-  companyLogoImg: any;
+  // path to a logo/image; should be a string referencing a public asset or imported file
+  companyLogoImg: string;
   descriptionDetails: DescriptionDetailsInterface;
   pagesInfoArr: PagesInfoInterface[];
 }
 
 export const Projects: ProjectInterface[] = [
   {
-    id: "portfolio-template",
-    companyName: "Portfolio Website (130+ GitHub stars)",
+    id: "worst-gpt",
+    companyName: "WorstGPT",
     type: "Personal",
-    category: ["Web Dev", "Frontend", "UI/UX"],
+    category: ["Full Stack", "AI", "Web Dev"],
     shortDescription:
-      "Open-source Next.js portfolio template recognized and forked by developers worldwide, optimized for SEO/AEO and performance.",
-    websiteLink: siteConfig.url,
-    githubLink: `https://github.com/${siteConfig.username}/minimal-next-portfolio`,
+      "A sarcastic AI chatbot platform that delivers brutally honest and humorous responses using a credit-based freemium model and AI-powered conversations.",
+    websiteLink: "https://worstgpt.vercel.app",
+    githubLink: "https://github.com/yourusername/worstgpt",
     techStack: [
-      "Next.js",
       "React",
+      "Vite",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
       "Typescript",
       "Tailwind CSS",
-      "Framer Motion",
-      "Vercel",
+      "Stripe",
     ],
-    startDate: new Date("2024-01-01"),
-    endDate: new Date("2025-12-01"),
-    companyLogoImg: "/projects/portfolio/logo.png",
+    startDate: new Date("2025-06-01"),
+    endDate: new Date("2025-08-01"),
+    companyLogoImg: "/projects/worstgpt/homepage.png",
     pagesInfoArr: [
       {
-        title: "Landing & Sections",
+        title: "Landing Page",
         description:
-          "A clean, minimal landing page with sections for skills, projects, contributions, and experience.",
-        imgArr: ["/profile-img.jpg"],
+          "Modern landing page introducing the sarcastic AI chatbot with features, pricing plans, and product highlights.",
+        imgArr: ["/projects/worstgpt/homepage.png"],
+      },
+      {
+        title: "Chat Interface",
+        description:
+          "Real-time chat interface where users interact with the AI chatbot and receive sarcastic responses.",
+        imgArr: ["/projects/worstgpt/chat.png"],
+      },
+      {
+        title: "Authentication System",
+        description:
+          "Secure authentication system with JWT and Google OAuth for seamless user login and account management.",
+        imgArr: ["/projects/worstgpt/authentication.png"],
       },
     ],
     descriptionDetails: {
       paragraphs: [
-        "I created an open-source Next.js portfolio template to help developers ship a modern, responsive portfolio quickly.",
-        "The project focuses heavily on performance, clean typography, and strong SEO/AEO foundations, and it has been adopted and forked by developers globally.",
+        "WorstGPT is a full-stack AI chatbot platform designed to provide humorous and sarcastic responses instead of traditional polite AI replies. The project explores character-driven AI interaction by creating a chatbot personality that delivers brutally honest and entertaining conversations.",
+
+        "The platform is built with a modern full-stack architecture using React and Vite for the frontend and Node.js with Express for the backend. MongoDB manages user accounts, chat usage tracking, and conversation data while Deepseek V3 API powers the AI responses.",
+
+        "To support scalability and monetization, the platform implements a credit-based freemium system where free users receive limited message credits and premium users gain extended access. Stripe subscription integration manages recurring payments, while webhook events automatically update premium user status.",
+
+        "The application also includes JWT authentication, Google OAuth login, API rate limiting, and a usage tracking system that deducts credits based on token usage. Automated cron jobs reset credits monthly to ensure fair usage across the platform.",
       ],
       bullets: [
-        "Created an open-source Next.js portfolio template recognized and forked by developers worldwide.",
-        "Ranked #1 on ChatGPT search for “best Next.js portfolio template GitHub” through AEO/GEO optimization.",
-        "Maintained a fast, responsive UI with a minimal, themeable design system.",
+        "Developed a full-stack AI chatbot platform using React, Node.js, Express, and MongoDB.",
+        "Integrated Deepseek V3 API to generate sarcastic and personality-driven AI responses.",
+        "Implemented a credit-based freemium system to control AI usage.",
+        "Built Stripe subscription integration with webhook-based premium upgrades.",
+        "Created JWT authentication with Google OAuth and email login support.",
+        "Developed a usage tracking system that deducts credits based on token consumption.",
+        "Implemented API rate limiting to prevent abuse and maintain platform stability.",
+        "Built cron jobs to automatically reset monthly credits for users.",
       ],
     },
   },
   {
-    id: "convot",
-    companyName: "Convot",
+    id: "quiz-app",
+    companyName: "Interactive Quiz App",
     type: "Personal",
-    category: ["Full Stack", "Backend", "Web Dev"],
+    category: ["Full Stack", "Web Dev"],
     shortDescription:
-      "Production-ready AI chatbot platform that crawls, indexes, and embeds knowledge from PDFs/URLs/text to deliver source-grounded answers via a one-line widget.",
-    techStack: ["Next.js", "React", "Node.js", "Typescript", "Python"],
-    startDate: new Date("2024-04-01"),
-    endDate: new Date("2024-10-01"),
-    companyLogoImg: "/projects/convot/logo.png",
+      "A full-stack quiz platform that allows users to take category-based quizzes, track scores, and improve knowledge through interactive learning.",
+    githubLink: "https://github.com/yourusername/quiz-app",
+    techStack: [
+      "React",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Javascript",
+      "Tailwind CSS",
+    ],
+    startDate: new Date("2024-12-01"),
+    endDate: new Date("2025-02-01"),
+    companyLogoImg: "/projects/quiz/logo.png",
     pagesInfoArr: [
       {
-        title: "Ingestion & Retrieval",
+        title: "Quiz Dashboard",
         description:
-          "Designed ingestion and retrieval pipelines supporting multiple content sources with secure tenant isolation.",
-        imgArr: ["/logo.png"],
+          "Main dashboard where users can choose quiz categories and start quiz sessions.",
+        imgArr: ["/projects/quiz/dashboard.png"],
+      },
+      {
+        title: "Quiz Questions Interface",
+        description:
+          "Interactive question interface displaying multiple-choice questions with real-time answer validation.",
+        imgArr: ["/projects/quiz/questions.png"],
+      },
+      {
+        title: "Results & Score Tracking",
+        description:
+          "Score calculation and result display after completing quiz sessions.",
+        imgArr: ["/projects/quiz/results.png"],
       },
     ],
     descriptionDetails: {
       paragraphs: [
-        "Convot is a production-ready AI chatbot platform designed to be embedded on any website with a single line widget.",
-        "It supports crawling and indexing knowledge from PDFs, URLs, and plain text, and it returns context-aware, source-grounded answers with integrated analytics.",
+        "The Quiz App is an interactive web platform designed to help users test their knowledge through engaging quizzes across multiple categories. The goal of the project was to create a simple yet effective learning environment where users can practice questions and receive instant feedback.",
+
+        "The application is built using a full-stack architecture with React on the frontend and Node.js with Express on the backend. MongoDB stores quiz questions, user attempts, and performance statistics, enabling efficient data management.",
+
+        "Users can participate in category-based quizzes where each session dynamically loads questions from the database. The platform automatically calculates scores and provides immediate feedback after quiz completion.",
+
+        "Special attention was given to responsive UI design and smooth navigation to ensure a seamless experience across both mobile and desktop devices while maintaining fast API performance.",
       ],
       bullets: [
-        "Built a production-ready AI chatbot platform with integrated analytics and a one-line embed widget.",
-        "Designed ingestion and retrieval pipelines to support multiple sources (PDFs, URLs, text) with tenant isolation.",
-        "Focused on reliability, security, and traceable answers by grounding responses in retrieved sources.",
+        "Developed a full-stack quiz platform using React, Node.js, Express, and MongoDB.",
+        "Implemented category-based quizzes with dynamically loaded questions.",
+        "Built automatic scoring and performance tracking system.",
+        "Designed responsive UI for both desktop and mobile devices.",
+        "Created RESTful APIs for quiz management and user results.",
+        "Implemented real-time answer validation and result display.",
+        "Optimized backend queries for faster question retrieval.",
       ],
     },
   },

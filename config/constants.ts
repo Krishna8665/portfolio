@@ -5,6 +5,7 @@ export type ValidSkills =
   | "Nest.js"
   | "express.js"
   | "Express"
+  | "Express.js" // allow explicit Express.js spelling
   | "JWT"
   | "Node.js"
   | "MongoDB"
@@ -62,7 +63,9 @@ export type ValidSkills =
   | "FastAPI"
   | "SQL"
   | "NoSQL"
-  | "Framer Motion";
+  | "Framer Motion"
+  | "Vite" // build tool used in some projects
+  | "Stripe"; // payment integration
 
 export type ValidCategory =
   | "Full Stack"
@@ -71,7 +74,8 @@ export type ValidCategory =
   | "UI/UX"
   | "Web Dev"
   | "Mobile Dev"
-  | "3D Modeling";
+  | "3D Modeling"
+  | "AI"; // added to support AI/ML related projects
 
 export type ValidExpType = "Personal" | "Professional";
 
