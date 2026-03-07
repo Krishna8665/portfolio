@@ -11,6 +11,8 @@ export type ValidSkills =
   | "MongoDB"
   | "Typescript"
   | "Javascript"
+  | "TypeScript" // alternate casing used in some entries
+  | "JavaScript" // alternate casing used in some entries
   | "HTML 5"
   | "CSS 3"
   | "React Native"
