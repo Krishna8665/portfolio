@@ -1,13 +1,12 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { ExternalLink, Github, Heart } from "lucide-react";
-import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import { Heart } from "lucide-react";
 import { useState } from "react";
+// socials configuration, includes platform icons and links
+import { SocialLinks } from "@/config/socials";
 
-export default function GithubRedirectCard() {
+export default function SocialLinksCard() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -25,27 +24,32 @@ export default function GithubRedirectCard() {
           />
         </div>
         <h2 className="font-heading text-xl tracking-tight lg:text-3xl duration-300">
-          Explore the source
+          Connect with me
         </h2>
-        <p className="mt-2 mb-10 font-heading text-lg text-muted-foreground">
-          The site is open source — view the repository and contribute on
-          GitHub.
+        <p className="mt-2 mb-4 font-heading text-lg text-muted-foreground">
+          Reach out on any of the platforms below:
         </p>
-        <Github className="w-10 h-10 text-muted-foreground mb-5" />
+        <div className="flex flex-col items-start space-y-3">
+          {SocialLinks.map((social) => {
+            const Icon = social.icon;
+            return (
+              <a
+                key={social.name}
+                href={social.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-lg font-medium text-primary hover:underline"
+              >
+                <Icon className="w-5 h-5" />
+                {/* don't show raw phone number; display either username or platform */}
+                <span>
+                  {social.name === "WhatsApp" ? social.name : social.username}
+                </span>
+              </a>
+            );
+          })}
+        </div>
       </CardContent>
-      <CardFooter className="px-8 pb-8 pt-0">
-        <Link
-          href={"https://github.com/Krishna8665/minimal-next-portfolio"}
-          target="_blank"
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "w-full bg-transparent border-2 transition-all duration-300 py-6"
-          )}
-        >
-          <span className="mr-2">Source Code</span>
-          <ExternalLink className="w-5 h-5" />
-        </Link>
-      </CardFooter>
       <div
         className={`h-1 bg-gradient-to-r from-red-500 to-red-500 transition-all duration-300 ease-out ${
           isHovered ? "opacity-100" : "opacity-0"

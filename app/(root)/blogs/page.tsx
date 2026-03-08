@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: siteConfig.ogImage,
+        url: siteConfig.ogImage ?? siteConfig.iconIco,
         width: 1200,
         height: 630,
         alt: `${siteConfig.authorName} Blog`,
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${pagesConfig.blogs.metadata.title} | ${siteConfig.name}`,
     description: pagesConfig.blogs.metadata.description,
-    images: [siteConfig.ogImage],
+    images: [siteConfig.ogImage ?? siteConfig.iconIco],
     creator: `@${siteConfig.username}`,
   },
 };

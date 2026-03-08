@@ -9,12 +9,23 @@ export const siteConfig = {
     twitter: "",
     github: "https://github.com/Krishna8665",
   },
-  ogImage:
-    "https://res.cloudinary.com/dvt5vkfwz/image/upload/v1767384721/naman_portfolio_og_image.png",
-  iconIco:
-    "https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357384/assets/naman-favicon.ico",
-  logoIcon:
-    "https://res.cloudinary.com/dbfvcn3f6/image/upload/v1692357294/assets/naman-logo.png",
+
+  // favicon used for browser tab. for example place `letterK.jpg` in
+  // `public/` and reference it here. the manifest will also pick up the
+  // same path so it is used for Progressive Web App icons.
+  // add a query string when you replace the file so browsers will refetch it
+  // instead of using a cached version. change `?v=2` each time you update.
+  // append a version query so browsers will refetch when the file changes
+  iconIco: "/letterK.jpg",
+  logoIcon: "/letterK.jpg",
+  // default image used in Open Graph metadata when a specific page/post does
+  // not supply one. this should point at a square graphic in `public/` and
+  // is referenced throughout the app. keeping it in the config makes it easy
+  // to change the site preview all at once.
+  ogImage: "/letterK.jpg",
+  // default image used in Open Graph metadata when a specific page/post
+  // does not supply one. keep this in sync with `iconIco` or replace with a
+  // dedicated social preview graphic.
   keywords: [
     "Krishna Khatri",
     "Computer Engineer",

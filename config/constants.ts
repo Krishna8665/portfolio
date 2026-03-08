@@ -24,6 +24,8 @@ export type ValidSkills =
   | "AWS"
   | "Bootstrap"
   | "Google Auth"
+  | "Google Maps Embed"
+  | "WhatsApp API"
   | "MySQL"
   | "Java"
   | "Databricks"

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Icons } from "@/components/common/icons";
@@ -18,6 +18,26 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useModalStore } from "@/hooks/use-modal-store";
 
+// schema for a single social link entry
+const socialLinkSchema = z.object({
+  platform: z.string().min(1, { message: "Platform cannot be empty" }),
+  value: z.string().refine(
+    (val) => {
+      if (val === "") return true;
+      try {
+        new URL(val);
+        return true;
+      } catch {
+        // not a URL
+      }
+      return /^[@\w.-]+$/.test(val);
+    },
+    {
+      message: "Enter a URL or username/handle or leave blank.",
+    }
+  ),
+});
+
 const formSchema = z.object({
   name: z.string().min(3, {
     message: "Name must contain at least 3 characters.",
@@ -26,7 +46,7 @@ const formSchema = z.object({
   message: z.string().min(10, {
     message: "Please write something more descriptive.",
   }),
-  social: z.string().url().optional().or(z.literal("")),
+  socials: z.array(socialLinkSchema).optional(),
 });
 
 export function ContactForm() {
@@ -40,8 +60,14 @@ export function ContactForm() {
       name: "",
       email: "",
       message: "",
-      social: "",
+      socials: [],
     },
+  });
+
+  // manage dynamic social link entries
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "socials",
   });
 
   // 2. Define a submit handler.
@@ -118,22 +144,54 @@ export function ContactForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="social"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Social (optional)</FormLabel>
-              <FormControl>
-                <Input placeholder="Link for social account" {...field} />
-              </FormControl>
-              {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* social links: user can add one or more platform/handle pairs */}
+        <div className="space-y-4">
+          {fields.map((item, index) => (
+            <div key={item.id} className="flex gap-2 items-end">
+              <FormField
+                control={form.control}
+                name={`socials.${index}.platform` as const}
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Platform</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. Instagram" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`socials.${index}.value` as const}
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Username/URL</FormLabel>
+                    <FormControl>
+                      <Input placeholder="@krishna or https://..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <button
+                type="button"
+                className="text-sm text-red-500"
+                onClick={() => remove(index)}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => append({ platform: "", value: "" })}
+          >
+            + Add social link
+          </Button>
+        </div>
         <Button type="submit">Submit</Button>
       </form>
     </Form>

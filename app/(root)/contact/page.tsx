@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 
 import PageContainer from "@/components/common/page-container";
-import GithubRedirectCard from "@/components/contact/github-redirect-card";
+// renamed component: it now displays social profiles instead of a GitHub link
+import SocialLinksCard from "@/components/contact/github-redirect-card";
 import { ContactForm } from "@/components/forms/contact-form";
 import { pagesConfig } from "@/config/pages";
 
@@ -21,7 +22,7 @@ export default function ContactPage() {
           <ContactForm />
         </div>
         <div className="flex-1 flex justify-end">
-          <GithubRedirectCard />
+          <SocialLinksCard />
         </div>
       </div>
     </PageContainer>

@@ -3,7 +3,7 @@ title: "From Express to Fastify: Modern Node.js APIs at Scale"
 date: "2026-03-03"
 description: "When to use Express, when to reach for Fastify, and patterns for building resilient, observable Node APIs — routing, validation, and performance considerations."
 tags: ["Node.js", "APIs", "Express", "Fastify"]
-coverImage: "/projects/portfolio/expressFastify.jpg"
+coverImage: "/blogs/expressFastify.jpg"
 featured: false
 readingTime: 6
 ---

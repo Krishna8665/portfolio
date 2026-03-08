@@ -3,7 +3,7 @@ title: "Practical AI for Developers: RAG, Embeddings, and Production Considerati
 date: "2026-03-03"
 description: "A concise guide to Retrieval-Augmented Generation (RAG), embeddings, vector stores, and the production concerns every developer should know."
 tags: ["AI", "RAG", "Embeddings", "LLM"]
-coverImage: "/projects/portfolio/rag.jpg"
+coverImage: "/blogs/rag.jpg"
 featured: false
 readingTime: 8
 ---

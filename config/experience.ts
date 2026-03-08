@@ -34,7 +34,7 @@ export const experiences: ExperienceInterface[] = [
     ],
     skills: ["React", "Node.js", "Next.js", "MongoDB", "Express", "Javascript"],
     companyUrl: "",
-    logo: "/experience/digitalpathsala-logo.png",
+    logo: "/experience/digital.png",
   },
   {
     id: "brandbuilder",
@@ -76,7 +76,7 @@ export const experiences: ExperienceInterface[] = [
     ],
     skills: ["React", "Node.js", "MongoDB", "Express", "JWT", "Typescript"],
     companyUrl: "",
-    logo: "/experience/flowopstech-logo.png",
+    logo: "/experience/flowOps.png",
   },
   {
     id: "swift-academy",

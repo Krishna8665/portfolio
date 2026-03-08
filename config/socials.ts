@@ -26,4 +26,10 @@ export const SocialLinks: SocialInterface[] = [
     icon: Icons.gmail,
     link: "mailto:khatrikrissna11@gmail.com",
   },
+  {
+    name: "WhatsApp",
+    username: "+977 9816115854",
+    icon: Icons.whatsapp,
+    link: "https://wa.me/9779816115854",
+  },
 ];

@@ -100,57 +100,82 @@ export const Projects: ProjectInterface[] = [
     type: "Professional",
     category: ["Full Stack", "Web Dev"],
     shortDescription:
-      "A full-stack quiz platform that allows users to take category-based quizzes, track scores, and improve knowledge through interactive learning.",
+      "A full-stack quiz management platform where users can create quizzes, participate in category-based tests, track results, and manage quiz content through an interactive dashboard.",
     githubLink: "https://github.com/Krishna8665/quiz-app",
     techStack: [
       "React",
       "Node.js",
       "Express.js",
       "MongoDB",
-      "Javascript",
+      "JavaScript",
       "Tailwind CSS",
     ],
     startDate: new Date("2024-12-01"),
     endDate: new Date("2025-02-01"),
-    companyLogoImg: "/projects/quiz/logo.png",
+    companyLogoImg: "/projects/quiz/search.jpeg",
     pagesInfoArr: [
       {
-        title: "Quiz Dashboard",
+        title: "Dashboard",
         description:
-          "Main dashboard where users can choose quiz categories and start quiz sessions.",
-        imgArr: ["/projects/quiz/dashboard.png"],
+          "Central dashboard where users can access quizzes, view available categories, and navigate to different quiz management features.",
+        imgArr: ["/projects/quiz/dashboard.jpeg"],
       },
       {
-        title: "Quiz Questions Interface",
+        title: "Create Quiz",
         description:
-          "Interactive question interface displaying multiple-choice questions with real-time answer validation.",
-        imgArr: ["/projects/quiz/questions.png"],
+          "Interface that allows users to create custom quizzes by adding questions, options, and correct answers for different categories.",
+        imgArr: ["/projects/quiz/createQuiz.jpeg"],
       },
       {
-        title: "Results & Score Tracking",
+        title: "Manage Quiz",
         description:
-          "Score calculation and result display after completing quiz sessions.",
-        imgArr: ["/projects/quiz/results.png"],
+          "Quiz management panel where users can edit, update, or delete previously created quizzes and manage quiz content efficiently.",
+        imgArr: ["/projects/quiz/manageQuizzes.jpeg"],
+      },
+      {
+        title: "Quiz History",
+        description:
+          "History section that tracks completed quizzes, displaying scores, attempts, and performance insights for each user.",
+        imgArr: ["/projects/quiz/quizHistory.jpeg"],
+      },
+      {
+        title: "Quiz Search",
+        description:
+          "Search interface where users can quickly find quizzes by entering keywords or selecting categories. This feature helps users discover quizzes relevant to their interests.",
+        imgArr: ["/projects/quiz/search.jpeg"],
+      },
+      {
+        title: "Buzzer Round",
+        description:
+          "Interactive buzzer round interface where participants compete to answer questions first by pressing the buzzer, creating a real-time competitive quiz experience.",
+        imgArr: ["/projects/quiz/teamBuzzer.jpeg"],
+      },
+      {
+        title: "Buzzer Round Question",
+        description:
+          "Question display screen for the buzzer round showing the quiz question and allowing players to submit answers after buzzing in.",
+        imgArr: ["/projects/quiz/buzzerQuestion.jpeg"],
       },
     ],
     descriptionDetails: {
       paragraphs: [
-        "The Quiz App is an interactive web platform designed to help users test their knowledge through engaging quizzes across multiple categories. The goal of the project was to create a simple yet effective learning environment where users can practice questions and receive instant feedback.",
+        "The Interactive Quiz App is a full-stack web platform designed to provide an engaging environment for creating and participating in quizzes. The application enables users not only to attempt quizzes but also to build and manage their own quiz content through an intuitive interface.",
 
-        "The application is built using a full-stack architecture with React on the frontend and Node.js with Express on the backend. MongoDB stores quiz questions, user attempts, and performance statistics, enabling efficient data management.",
+        "The system is developed using React for the frontend and Node.js with Express for the backend, while MongoDB is used to store quiz questions, categories, user attempts, and performance data. This architecture ensures efficient data handling and scalable quiz management.",
 
-        "Users can participate in category-based quizzes where each session dynamically loads questions from the database. The platform automatically calculates scores and provides immediate feedback after quiz completion.",
+        "Users can create quizzes by adding multiple-choice questions, defining correct answers, and organizing them into categories. The platform dynamically loads questions during quiz sessions and automatically evaluates responses to generate real-time scores.",
 
-        "Special attention was given to responsive UI design and smooth navigation to ensure a seamless experience across both mobile and desktop devices while maintaining fast API performance.",
+        "The application also includes quiz management and history tracking features, allowing users to monitor their past attempts, review results, and improve their performance over time while maintaining a responsive and user-friendly interface across devices.",
       ],
       bullets: [
         "Developed a full-stack quiz platform using React, Node.js, Express, and MongoDB.",
-        "Implemented category-based quizzes with dynamically loaded questions.",
-        "Built automatic scoring and performance tracking system.",
-        "Designed responsive UI for both desktop and mobile devices.",
-        "Created RESTful APIs for quiz management and user results.",
-        "Implemented real-time answer validation and result display.",
-        "Optimized backend queries for faster question retrieval.",
+        "Implemented quiz creation functionality with customizable questions and answers.",
+        "Built a quiz management system for editing and maintaining quiz content.",
+        "Designed a responsive dashboard for navigating quizzes and user activities.",
+        "Implemented automatic scoring and real-time answer validation.",
+        "Developed quiz history tracking to store user attempts and performance.",
+        "Created RESTful APIs for quiz creation, management, and result tracking.",
+        "Optimized database queries for faster quiz loading and result processing.",
       ],
     },
   },
@@ -273,6 +298,64 @@ export const Projects: ProjectInterface[] = [
         "Designed a responsive user interface for smooth navigation across devices.",
         "Implemented user authentication for secure account and booking management.",
         "Optimized database queries for efficient bus schedule and seat availability retrieval.",
+      ],
+    },
+  },
+  {
+    id: "restaurant-website",
+    companyName: "Hotel & Restaurant Website",
+    type: "Personal",
+    category: ["Frontend", "Web Dev"],
+    shortDescription:
+      "A responsive restaurant website that showcases menu items, location details, and enables customers to easily contact the restaurant via WhatsApp and view its location on Google Maps.",
+    githubLink: "https://github.com/yourusername/restaurant-website",
+    techStack: [
+      "React",
+      "JavaScript",
+      "Tailwind CSS",
+      "Google Maps Embed",
+      "WhatsApp API",
+    ],
+    startDate: new Date("2025-03-01"),
+    endDate: new Date("2025-03-15"),
+    companyLogoImg: "/projects/restaurant/pandeliHomepage.png",
+    pagesInfoArr: [
+      {
+        title: "Homepage",
+        description:
+          "Main landing page introducing the restaurant with featured dishes, branding elements, and quick access to menu and contact options.",
+        imgArr: ["/projects/restaurant/pandeliHomepage.png"],
+      },
+      {
+        title: "Menu Page",
+        description:
+          "Menu section displaying food items offered by the restaurant, allowing customers to browse different dishes and pricing.",
+        imgArr: ["/projects/restaurant/menu.png"],
+      },
+      {
+        title: "Footer with Location Map",
+        description:
+          "Footer section containing restaurant contact details, a WhatsApp call-to-action button, and an embedded Google Map showing the restaurant location.",
+        imgArr: ["/projects/restaurant/footer.png"],
+      },
+    ],
+    descriptionDetails: {
+      paragraphs: [
+        "The Hotel & Restaurant Website is a modern and responsive web platform designed to showcase restaurant services, menu items, and contact information in a visually appealing way. The goal of the project was to create a simple digital presence that allows customers to explore food offerings and easily reach the restaurant.",
+
+        "The website features a structured menu page where customers can browse available dishes along with their descriptions and pricing. This helps visitors quickly understand the restaurant’s offerings before visiting or placing an order.",
+
+        "To improve accessibility and communication, the website integrates a WhatsApp contact option that allows users to directly message or call the restaurant with a single click.",
+
+        "The platform also includes a Google Maps integration within the footer section, enabling customers to quickly locate the restaurant and get directions, making it easier for new visitors to find the location.",
+      ],
+      bullets: [
+        "Developed a responsive restaurant website using React and Tailwind CSS.",
+        "Created a menu display system to showcase restaurant dishes and pricing.",
+        "Integrated WhatsApp contact functionality for direct customer communication.",
+        "Embedded Google Maps to display the restaurant’s physical location.",
+        "Designed a modern and mobile-friendly user interface.",
+        "Optimized page layout for easy navigation and quick access to restaurant information.",
       ],
     },
   },
