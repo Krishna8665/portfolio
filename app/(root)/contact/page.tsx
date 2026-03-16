@@ -1,7 +1,5 @@
 import { Metadata } from "next";
-
 import PageContainer from "@/components/common/page-container";
-// renamed component: it now displays social profiles instead of a GitHub link
 import SocialLinksCard from "@/components/contact/github-redirect-card";
 import { ContactForm } from "@/components/forms/contact-form";
 import { pagesConfig } from "@/config/pages";
