@@ -1,5 +1,5 @@
 import { ValidCategory, ValidExpType, ValidSkills } from "./constants";
-
+//
 interface PagesInfoInterface {
   title: string;
   imgArr: string[];
