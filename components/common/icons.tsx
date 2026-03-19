@@ -44,16 +44,13 @@ import {
 } from "react-icons/hi";
 import { IoIosGitBranch } from "react-icons/io";
 import {
-  SiAmazonwebservices,
   SiAngular,
   SiBootstrap,
-  SiCss3,
   SiExpress,
   SiGmail,
   SiGraphql,
   SiHtml5,
   SiJavascript,
-  SiLinkedin,
   SiMongodb,
   SiMui,
   SiMysql,
@@ -106,10 +103,12 @@ export const Icons = {
   link: HiOutlineLink,
   externalLink: HiOutlineExternalLink,
   star: AiFillStar,
-  amazonaws: SiAmazonwebservices,
+  // SiAmazonwebservices not available in this react-icons build; use a neutral building icon as a fallback
+  amazonaws: Building,
   angular: SiAngular,
   bootstrap: SiBootstrap,
-  css3: SiCss3,
+  // SiCss3 isn't exported in this package version; fall back to a generic file icon
+  css3: File,
   express: SiExpress,
   graphql: SiGraphql,
   html5: SiHtml5,
@@ -128,7 +127,8 @@ export const Icons = {
   typescript: SiTypescript,
   gmail: SiGmail,
   twitter: SiX,
-  linkedin: SiLinkedin,
+  // LinkedIn icon not present in this react-icons version; use an external-link style icon as a fallback
+  linkedin: HiOutlineLink,
   whatsapp: SiWhatsapp,
   userFill: BiSolidUser,
   work: HiBriefcase,

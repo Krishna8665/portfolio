@@ -1,6 +1,7 @@
 import { MainNav } from "@/components/common/main-nav";
 import { ModeToggle } from "@/components/common/mode-toggle";
 import { SiteFooter } from "@/components/common/site-footer";
+import VisitCounter from "@/components/visit-counter.client";
 import { routesConfig } from "@/config/routes";
 
 interface MarketingLayoutProps {
@@ -14,10 +15,12 @@ export default function MarketingLayout({ children }: MarketingLayoutProps) {
         <div className="flex h-20 items-center justify-between py-6">
           <MainNav items={routesConfig.mainNav}>
             <div className="flex items-center gap-3">
+              <VisitCounter />
               <ModeToggle />
             </div>
           </MainNav>
           <nav className="flex items-center gap-5">
+            <VisitCounter />
             <ModeToggle />
           </nav>
         </div>
