@@ -38,12 +38,13 @@ export default function VisitCounter() {
   }, []);
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={fetchCount}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") fetchCount();
+    <button
+      type="button"
+      onClick={(e) => {
+        // prevent navigation if this component is placed inside a link or form
+        e.preventDefault();
+        e.stopPropagation();
+        fetchCount();
       }}
       className="inline-flex items-center bg-muted px-3 py-0.5 rounded-full text-sm font-medium gap-0 cursor-pointer select-none"
       aria-label="Visited"
@@ -57,6 +58,6 @@ export default function VisitCounter() {
       </span>
       <span className="ml-1 text-xs text-muted-foreground">Visited</span>
       <span className="font-mono ml-1">{loading ? "..." : (count ?? "—")}</span>
-    </div>
+    </button>
   );
 }
