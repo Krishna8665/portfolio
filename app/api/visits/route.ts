@@ -20,7 +20,48 @@ if (VISITS_USE_UPSTASH && UPSTASH_URL && UPSTASH_TOKEN) {
   }
 }
 
-// CountAPI fallback for a single global counter
+// CounterAPI (v2) server-backed fallback / primary if configured
+const COUNTERAPI_BASE = process.env.COUNTERAPI_BASE;
+const COUNTERAPI_KEY = process.env.COUNTERAPI_KEY;
+
+async function counterapiGet() {
+  if (!COUNTERAPI_BASE || !COUNTERAPI_KEY) return null;
+  try {
+    const res = await fetch(COUNTERAPI_BASE, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${COUNTERAPI_KEY}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    console.error("CounterAPI GET failed:", e);
+    return null;
+  }
+}
+
+async function counterapiUp() {
+  if (!COUNTERAPI_BASE || !COUNTERAPI_KEY) return null;
+  try {
+    // V2 API uses GET for the /up endpoint
+    const res = await fetch(`${COUNTERAPI_BASE}/up`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${COUNTERAPI_KEY}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    console.error("CounterAPI UP failed:", e);
+    return null;
+  }
+}
+
+// CountAPI fallback (legacy)
 async function countapiHitGlobal(namespace: string) {
   try {
     const res = await fetch(
@@ -40,82 +81,51 @@ async function getIp(req: Request) {
   if (realIp) return realIp;
   return "unknown";
 }
-
 export async function GET(req: Request) {
   try {
-    const ip = await getIp(req);
-    const ipHash = crypto.createHash("sha256").update(ip).digest("hex");
-    const recentKey = `visit:recent:${ipHash}`;
-    // Dedupe TTL (seconds). Set VISITS_DEDUPE_TTL_SECONDS=0 to disable deduping
-    // and count every request.
-    const DEDUPE_TTL = Number(process.env.VISITS_DEDUPE_TTL_SECONDS ?? "3600");
-
-    let shouldCount = false;
-    let useFallback = false;
-    try {
-      // If dedupe TTL is <= 0, count every request (no dedupe).
-      if (DEDUPE_TTL <= 0) {
-        shouldCount = true;
-      } else if (redis) {
-        const setRes: any = await redis.set(recentKey, "1", {
-          ex: DEDUPE_TTL,
-          nx: true,
-        } as any);
-        if (setRes === "OK" || setRes === true) {
-          shouldCount = true;
-        }
-      } else {
-        useFallback = true;
-        shouldCount = true;
-      }
-    } catch (e) {
-      console.error("SET NX failed:", e);
-      try {
-        if (redis && DEDUPE_TTL > 0) {
-          const exists = await redis.get(recentKey).catch(() => null);
-          if (!exists) {
-            await redis
-              .set(recentKey, "1", { ex: DEDUPE_TTL } as any)
-              .catch(() => null);
-            shouldCount = true;
-          }
-        } else {
-          useFallback = true;
-          shouldCount = true;
-        }
-      } catch (_err) {
-        useFallback = true;
-        shouldCount = true;
-      }
-    }
-
-    let global = 0;
-    if (shouldCount) {
-      if (redis && !useFallback) {
-        try {
-          const g = await redis.incr("visits:global");
-          global = Number(g || 0);
-        } catch (e) {
-          console.error("Upstash INCR failed:", e);
-          useFallback = true;
-        }
-      } else {
-        useFallback = true;
-      }
-    }
-
-    if (useFallback) {
-      const g = await countapiHitGlobal("krishna-portfolio");
-      global = Number(g?.value ?? 0);
+    // Prefer CounterAPI if configured
+    if (COUNTERAPI_BASE && COUNTERAPI_KEY) {
+      const res = await counterapiGet();
+      // CounterAPI v2 returns numeric counts in data.up_count (or data.up_count)
+      const global = Number(
+        res?.data?.up_count ?? res?.data?.value ?? res?.value ?? 0
+      );
       return NextResponse.json(
         { global },
-        { headers: { "x-visits-backend": "countapi" } }
+        { headers: { "x-visits-backend": "counterapi" } }
       );
     }
 
+    // If Upstash is available, read from redis
+    if (redis) {
+      try {
+        const g = await redis.get("visits:global");
+        const global = Number(g || 0);
+        return NextResponse.json(
+          { global },
+          { headers: { "x-visits-backend": "upstash" } }
+        );
+      } catch (e) {
+        console.error("Upstash GET failed:", e);
+      }
+    }
+
+    // fallback to CountAPI read
+    const g = await (async () => {
+      try {
+        const res = await fetch(
+          `https://api.countapi.xyz/get/krishna-portfolio/global`
+        );
+        if (!res.ok) return null;
+        return await res.json();
+      } catch (_e) {
+        return null;
+      }
+    })();
+    const global = Number(g?.value ?? 0);
     return NextResponse.json(
       { global },
-      { headers: { "x-visits-backend": redis ? "upstash" : "none" } }
+      { headers: { "x-visits-backend": "countapi" } }
     );
   } catch (err: any) {
     return NextResponse.json(
@@ -126,5 +136,116 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  return GET(req);
+  try {
+    const ip = await getIp(req);
+    const ipHash = crypto.createHash("sha256").update(ip).digest("hex");
+    const recentKey = `visit:recent:${ipHash}`;
+    const DEDUPE_TTL = Number(process.env.VISITS_DEDUPE_TTL_SECONDS ?? "3600");
+
+    let shouldCount = false;
+    try {
+      if (DEDUPE_TTL <= 0) {
+        shouldCount = true;
+      } else if (redis) {
+        const setRes: any = await redis.set(recentKey, "1", {
+          ex: DEDUPE_TTL,
+          nx: true,
+        } as any);
+        if (setRes === "OK" || setRes === true) shouldCount = true;
+      } else {
+        // No redis available to dedupe; best effort — count the visit
+        shouldCount = true;
+      }
+    } catch (e) {
+      console.error("Deduping failed:", e);
+      shouldCount = true;
+    }
+
+    let global = 0;
+    if (shouldCount) {
+      // If Upstash is available, always record the unique visit there first
+      // (this provides the IP-deduplicated unique counter you can inspect later).
+      let upstashCount: number | null = null;
+      if (redis) {
+        try {
+          const g = await redis.incr("visits:global");
+          upstashCount = Number(g || 0);
+        } catch (e) {
+          console.error("Upstash INCR failed:", e);
+          upstashCount = null;
+        }
+      }
+
+      // Prefer CounterAPI for the value we show on the site (display). We still
+      // increment Upstash above for unique tracking. CounterAPI v2 uses GET for
+      // /up and returns the display count in data.up_count.
+      if (COUNTERAPI_BASE && COUNTERAPI_KEY) {
+        const res = await counterapiUp();
+        global = Number(
+          res?.data?.up_count ?? res?.data?.value ?? res?.value ?? 0
+        );
+        // Return the CounterAPI display value, but expose the Upstash unique
+        // count in a debug header when available.
+        const headers: Record<string, string> = {
+          "x-visits-backend": "counterapi",
+        };
+        if (upstashCount !== null)
+          headers["x-visits-unique"] = String(upstashCount);
+        return NextResponse.json({ global }, { headers });
+      }
+
+      // If CounterAPI not configured, but Upstash increment succeeded, return
+      // the Upstash unique count as the authoritative value to show.
+      if (upstashCount !== null) {
+        return NextResponse.json(
+          { global: upstashCount },
+          { headers: { "x-visits-backend": "upstash" } }
+        );
+      }
+
+      // As a last resort, fall back to CountAPI hit
+      const g = await countapiHitGlobal("krishna-portfolio");
+      global = Number(g?.value ?? 0);
+      return NextResponse.json(
+        { global },
+        { headers: { "x-visits-backend": "countapi" } }
+      );
+    }
+
+    // Not counted due to dedupe — return current value
+    const current = await (async () => {
+      if (COUNTERAPI_BASE && COUNTERAPI_KEY) {
+        const r = await counterapiGet();
+        return Number(r?.data?.up_count ?? r?.data?.value ?? r?.value ?? 0);
+      }
+      if (redis) {
+        const g = await redis.get("visits:global");
+        return Number(g || 0);
+      }
+      const r = await fetch(
+        `https://api.countapi.xyz/get/krishna-portfolio/global`
+      ).catch(() => null);
+      if (!r) return 0;
+      const j = await r.json().catch(() => null);
+      return Number(j?.value ?? 0);
+    })();
+
+    return NextResponse.json(
+      { global: current },
+      {
+        headers: {
+          "x-visits-backend": redis
+            ? "upstash"
+            : COUNTERAPI_BASE
+              ? "counterapi"
+              : "countapi",
+        },
+      }
+    );
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: String(err?.message || err), global: 0 },
+      { status: 500 }
+    );
+  }
 }

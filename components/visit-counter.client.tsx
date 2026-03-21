@@ -6,22 +6,41 @@ export default function VisitCounter() {
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState<number | null>(null);
 
-  async function fetchCount() {
-    setLoading(true);
+  // Server-backed mode: call our own /api/visits endpoint. This keeps
+  // API keys server-side (CounterAPI) and lets the server handle persistence.
+  async function fetchCount(optimistic = false) {
+    if (!optimistic) setLoading(true);
     try {
-      const res = await fetch("/api/visits", { method: "POST" });
+      const res = await fetch(`/api/visits`, {
+        method: optimistic ? "POST" : "GET",
+      });
+      if (!res.ok) return;
       const json = await res.json();
       const global = Number(json.global ?? 0);
-      setCount(global ?? null);
+      setCount(global);
+      try {
+        localStorage.setItem("visits:cached", String(global));
+      } catch (_e) {}
+      if (optimistic) {
+        try {
+          localStorage.setItem("visits:lastHitAt", String(Date.now()));
+        } catch (_e) {}
+      }
     } catch (e) {
-      // ignore errors; keep previous state
+      // ignore
     } finally {
-      setLoading(false);
+      if (!optimistic) setLoading(false);
     }
   }
 
   useEffect(() => {
-    fetchCount();
+    // show cached value immediately if available, then refresh from CountAPI (GET)
+    try {
+      const cached = localStorage.getItem("visits:cached");
+      if (cached) setCount(Number(cached));
+    } catch (_e) {}
+    // use read-only GET on mount to avoid incrementing counts just by viewing
+    fetchCount(false);
   }, []);
 
   // Poll the visits API every 15 seconds so the global count stays reasonably
@@ -37,6 +56,35 @@ export default function VisitCounter() {
     return () => clearInterval(id);
   }, []);
 
+  // send a hit when the page becomes hidden (user navigates away). Use sendBeacon
+  // where available, otherwise use keepalive fetch. This increases chance the
+  // visit is recorded even when the user closes the tab quickly.
+  useEffect(() => {
+    const sendHidden = () => {
+      // avoid double-hitting if we recorded a local hit very recently
+      try {
+        const last = Number(localStorage.getItem("visits:lastHitAt") || "0");
+        if (Date.now() - last < 10_000) return; // skip if hit within 10s
+      } catch (_e) {}
+
+      const url = `${window.location.origin}/api/visits`;
+      try {
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(url);
+        } else {
+          fetch(url, { method: "POST", keepalive: true }).catch(() => {});
+        }
+      } catch (_e) {
+        // ignore
+      }
+    };
+    const handler = () => {
+      if (document.visibilityState === "hidden") sendHidden();
+    };
+    document.addEventListener("visibilitychange", handler);
+    return () => document.removeEventListener("visibilitychange", handler);
+  }, []);
+
   return (
     <button
       type="button"
@@ -44,7 +92,13 @@ export default function VisitCounter() {
         // prevent navigation if this component is placed inside a link or form
         e.preventDefault();
         e.stopPropagation();
-        fetchCount();
+        // optimistic UI: increment immediately and fire CountAPI in background
+        setCount((c) => (c ?? 0) + 1);
+        try {
+          localStorage.setItem("visits:cached", String((count ?? 0) + 1));
+        } catch (_e) {}
+        // call CountAPI but don't block UI
+        fetchCount(true);
       }}
       className="inline-flex items-center bg-muted px-3 py-0.5 rounded-full text-sm font-medium gap-0 cursor-pointer select-none"
       aria-label="Visited"
