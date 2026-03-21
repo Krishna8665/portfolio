@@ -24,6 +24,11 @@ if (VISITS_USE_UPSTASH && UPSTASH_URL && UPSTASH_TOKEN) {
 const COUNTERAPI_BASE = process.env.COUNTERAPI_BASE;
 const COUNTERAPI_KEY = process.env.COUNTERAPI_KEY;
 
+// How long (seconds) to cache the display value in Upstash for fast reads.
+const VISITS_DISPLAY_CACHE_TTL = Number(
+  process.env.VISITS_DISPLAY_CACHE_TTL ?? "30"
+);
+
 async function counterapiGet() {
   if (!COUNTERAPI_BASE || !COUNTERAPI_KEY) return null;
   try {
@@ -83,6 +88,32 @@ async function getIp(req: Request) {
 }
 export async function GET(req: Request) {
   try {
+    // Fast path: if we have Upstash and a cached display value, return it
+    // immediately. This lets the site render quickly from CDN/edge cache
+    // without waiting for CounterAPI on every request.
+    if (redis) {
+      try {
+        const cached = await redis.get("visits:display");
+        if (cached != null) {
+          const global = Number(cached || 0);
+          return NextResponse.json(
+            { global },
+            {
+              headers: {
+                "x-visits-backend": "upstash-cache",
+                // Allow CDN/edge to cache this short-lived value and serve
+                // fast; still revalidate after short TTL.
+                "Cache-Control":
+                  "public, max-age=0, s-maxage=10, stale-while-revalidate=59",
+              },
+            }
+          );
+        }
+      } catch (e) {
+        console.error("Upstash read for display cache failed:", e);
+      }
+    }
+
     // Prefer CounterAPI if configured
     if (COUNTERAPI_BASE && COUNTERAPI_KEY) {
       const res = await counterapiGet();
@@ -92,7 +123,13 @@ export async function GET(req: Request) {
       );
       return NextResponse.json(
         { global },
-        { headers: { "x-visits-backend": "counterapi" } }
+        {
+          headers: {
+            "x-visits-backend": "counterapi",
+            "Cache-Control":
+              "public, max-age=0, s-maxage=10, stale-while-revalidate=59",
+          },
+        }
       );
     }
 
@@ -103,7 +140,13 @@ export async function GET(req: Request) {
         const global = Number(g || 0);
         return NextResponse.json(
           { global },
-          { headers: { "x-visits-backend": "upstash" } }
+          {
+            headers: {
+              "x-visits-backend": "upstash",
+              "Cache-Control":
+                "public, max-age=0, s-maxage=10, stale-while-revalidate=59",
+            },
+          }
         );
       } catch (e) {
         console.error("Upstash GET failed:", e);
@@ -125,7 +168,13 @@ export async function GET(req: Request) {
     const global = Number(g?.value ?? 0);
     return NextResponse.json(
       { global },
-      { headers: { "x-visits-backend": "countapi" } }
+      {
+        headers: {
+          "x-visits-backend": "countapi",
+          "Cache-Control":
+            "public, max-age=0, s-maxage=10, stale-while-revalidate=59",
+        },
+      }
     );
   } catch (err: any) {
     return NextResponse.json(
@@ -184,10 +233,22 @@ export async function POST(req: Request) {
         global = Number(
           res?.data?.up_count ?? res?.data?.value ?? res?.value ?? 0
         );
+        // Cache the display value in Upstash for fast subsequent reads.
+        if (redis) {
+          try {
+            await redis.set("visits:display", String(global), {
+              ex: VISITS_DISPLAY_CACHE_TTL,
+            } as any);
+          } catch (e) {
+            console.error("Failed to set visits:display in Upstash:", e);
+          }
+        }
         // Return the CounterAPI display value, but expose the Upstash unique
         // count in a debug header when available.
         const headers: Record<string, string> = {
           "x-visits-backend": "counterapi",
+          "Cache-Control":
+            "public, max-age=0, s-maxage=10, stale-while-revalidate=59",
         };
         if (upstashCount !== null)
           headers["x-visits-unique"] = String(upstashCount);
@@ -197,9 +258,23 @@ export async function POST(req: Request) {
       // If CounterAPI not configured, but Upstash increment succeeded, return
       // the Upstash unique count as the authoritative value to show.
       if (upstashCount !== null) {
+        // Also keep the display cache in sync when we only have Upstash.
+        if (redis) {
+          try {
+            await redis.set("visits:display", String(upstashCount), {
+              ex: VISITS_DISPLAY_CACHE_TTL,
+            } as any);
+          } catch (_e) {}
+        }
         return NextResponse.json(
           { global: upstashCount },
-          { headers: { "x-visits-backend": "upstash" } }
+          {
+            headers: {
+              "x-visits-backend": "upstash",
+              "Cache-Control":
+                "public, max-age=0, s-maxage=10, stale-while-revalidate=59",
+            },
+          }
         );
       }
 
