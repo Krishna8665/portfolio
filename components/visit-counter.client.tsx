@@ -34,19 +34,31 @@ export default function VisitCounter() {
   }
 
   useEffect(() => {
-    // show cached value immediately if available, then refresh from CountAPI (GET)
+    // show cached value immediately if available, then refresh from server (GET)
     try {
       const cached = localStorage.getItem("visits:cached");
       if (cached) setCount(Number(cached));
     } catch (_e) {}
+
     // use read-only GET on mount to avoid incrementing counts just by viewing
     fetchCount(false);
+
+    // Also attempt to record a visit on mount for more reliable counting.
+    // We avoid double-posting by checking a local `visits:lastHitAt` timestamp
+    // and only POST if it's older than the client-side dedupe TTL.
+    try {
+      const last = Number(localStorage.getItem("visits:lastHitAt") || "0");
+      const ttlSec = Number(
+        process.env.NEXT_PUBLIC_VISITS_DEDUPE_TTL ?? "3600"
+      );
+      if (Date.now() - last > ttlSec * 1000) {
+        // use the same POST helper which updates lastHitAt when optimistic=true
+        fetchCount(true);
+      }
+    } catch (_e) {}
   }, []);
 
-  // Poll the visits API every 15 seconds so the global count stays reasonably
-  // Polling is optional. By default polling is disabled (manual refresh only).
-  // Set NEXT_PUBLIC_VISITS_POLL_INTERVAL (seconds) in your environment to
-  // enable periodic polling (e.g. 15 for 15s).
+  // Poll the visits API every N seconds if configured (optional)
   useEffect(() => {
     const pollSec = Number(process.env.NEXT_PUBLIC_VISITS_POLL_INTERVAL ?? 0);
     if (!pollSec || pollSec <= 0) return;
@@ -89,7 +101,7 @@ export default function VisitCounter() {
     <div
       role="status"
       aria-label="Visited count"
-      className="inline-flex items-center bg-muted px-3 py-0.5 rounded-full text-sm font-medium gap-0 select-none"
+      className="inline-flex items-center bg-muted px-2 sm:px-3 py-0.5 rounded-full text-sm font-medium gap-0 select-none"
     >
       <span className="inline-flex items-center justify-center w-4 h-4">
         {loading ? (
@@ -98,10 +110,21 @@ export default function VisitCounter() {
           <Icons.user className="w-3 h-3 text-primary" />
         )}
       </span>
+
       <span className="ml-1 text-xs text-muted-foreground">
-        {loading ? "Welcome to my page" : "Visited"}
+        {loading ? (
+          <>
+            <span className="sm:hidden">Welcome</span>
+            <span className="hidden sm:inline">Welcome to my page</span>
+          </>
+        ) : (
+          <span>Visited</span>
+        )}
       </span>
-      <span className="font-mono ml-1">{loading ? "..." : (count ?? "—")}</span>
+
+      <span aria-live="polite" className="font-mono ml-1 text-xs sm:text-sm">
+        {loading ? "..." : (count ?? "—")}
+      </span>
     </div>
   );
 }
