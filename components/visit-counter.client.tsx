@@ -86,22 +86,10 @@ export default function VisitCounter() {
   }, []);
 
   return (
-    <button
-      type="button"
-      onClick={(e) => {
-        // prevent navigation if this component is placed inside a link or form
-        e.preventDefault();
-        e.stopPropagation();
-        // optimistic UI: increment immediately and fire CountAPI in background
-        setCount((c) => (c ?? 0) + 1);
-        try {
-          localStorage.setItem("visits:cached", String((count ?? 0) + 1));
-        } catch (_e) {}
-        // call CountAPI but don't block UI
-        fetchCount(true);
-      }}
-      className="inline-flex items-center bg-muted px-3 py-0.5 rounded-full text-sm font-medium gap-0 cursor-pointer select-none"
-      aria-label="Visited"
+    <div
+      role="status"
+      aria-label="Visited count"
+      className="inline-flex items-center bg-muted px-3 py-0.5 rounded-full text-sm font-medium gap-0 select-none"
     >
       <span className="inline-flex items-center justify-center w-4 h-4">
         {loading ? (
@@ -112,6 +100,6 @@ export default function VisitCounter() {
       </span>
       <span className="ml-1 text-xs text-muted-foreground">Visited</span>
       <span className="font-mono ml-1">{loading ? "..." : (count ?? "—")}</span>
-    </button>
+    </div>
   );
 }
