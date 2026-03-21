@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/common/theme-provider";
 
 import { Icons } from "@/components/common/icons";
 import { Button } from "@/components/ui/button";
