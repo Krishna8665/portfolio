@@ -98,7 +98,9 @@ export default function VisitCounter() {
           <Icons.user className="w-3 h-3 text-primary" />
         )}
       </span>
-      <span className="ml-1 text-xs text-muted-foreground">Visited</span>
+      <span className="ml-1 text-xs text-muted-foreground">
+        {loading ? "Welcome to my page" : "Visited"}
+      </span>
       <span className="font-mono ml-1">{loading ? "..." : (count ?? "—")}</span>
     </div>
   );
